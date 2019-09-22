@@ -21,7 +21,7 @@ class MiniBatch:
 
         self.__weights = []
 
-        n_nodes = [self.__n_features, self.__nb_nodes * self.__hidden_layer, 1] # 1 for output
+        n_nodes = [self.__n_features] + [self.__nb_nodes] * self.__hidden_layer + [1] # 1 for output
 
         for i in range (0, self.__hidden_layer - 1) :
             b = []
@@ -39,6 +39,14 @@ class MiniBatch:
     def __forward_pass(self) :
 
     def __backward_pass(self) :
+        self.__errors = []
+
+        # output layer
+        error = self.__sigmoid(self.__outputs[self.__hidden_layer]) * (1 - self.__sigmoid(self.__outputs[self.__hidden_layer])) * ()
+
+        # hidden layer
+        for i in range (len(self.__outputs) - 1, -1, -1) :
+
 
     def __update_weights(self) :
         
