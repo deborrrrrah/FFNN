@@ -21,11 +21,6 @@ class MiniBatch:
 
         self.__weights = []
 
-        weight = []
-        for i in range (0, self.__n_features) :
-            weight.append(random.random())
-        self.__weights.append(weight)
-
         n_nodes = [self.__n_features, self.__nb_nodes * self.__hidden_layer, 1] # 1 for output
 
         for i in range (0, self.__hidden_layer - 1) :
@@ -37,10 +32,6 @@ class MiniBatch:
                     c.append(random.random())
                 b.append(c)
             self.__weights.append(b)
-
-        for i in range (0, self.__hidden_layer) :
-            weight = []
-            for j in range (0, )
 
     def __forward_pass(self) :
 
