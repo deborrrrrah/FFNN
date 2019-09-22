@@ -33,11 +33,14 @@ class MiniBatch:
                 b.append(c)
             self.__weights.append(b)
 
+    def __generate_batch(self) :
+        return 
+
     def __forward_pass(self) :
 
     def __backward_pass(self) :
 
-    def __update(self) :
+    def __update_weights(self) :
         
     def __sigmoid(self) :
 
