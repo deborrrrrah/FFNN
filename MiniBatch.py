@@ -3,30 +3,44 @@ import random
 class MiniBatch:
     # data structure
     # weights
+    __errors = []
+    __outputs = []
+    __weights = []
 
     def __init__(self, nb_nodes, hidden_layer, batch_size, learning_rate, momentum, epoch) :
-        self.nb_nodes = nb_nodes
-        self.hidden_layer = hidden_layer
-        self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.momentum = momentum
-        self.epoch = epoch
+        self.__nb_nodes = nb_nodes
+        self.__hidden_layer = hidden_layer
+        self.__batch_size = batch_size
+        self.__learning_rate = learning_rate
+        self.__momentum = momentum
+        self.__epoch = epoch
 
     def __random_weights(self) :
-        self.n_features = len(self.X_train.columns)
+        # bias in index 0
+        self.__n_features = len(self.__X_train.columns)
 
-        self.weights = []
+        self.__weights = []
 
         weight = []
-        for i in range (0, self.n_features) :
+        for i in range (0, self.__n_features) :
             weight.append(random.random())
-        self.weights.append(weight)
+        self.__weights.append(weight)
 
-        for i in range (0, self.hidden_layer) :
+        n_nodes = [self.__n_features, self.__nb_nodes * self.__hidden_layer, 1] # 1 for output
+
+        for i in range (0, self.__hidden_layer - 1) :
+            b = []
+            for j in range (0, n_nodes[i] + 1) :
+                # index 0 for bias
+                c = []
+                for k in range (0, n_nodes[i + 1]) :
+                    c.append(random.random())
+                b.append(c)
+            self.__weights.append(b)
+
+        for i in range (0, self.__hidden_layer) :
             weight = []
-            for j in range (0, self.nb_nodes) :
-                weight.append(random.random())
-            self.weights.append(weight)
+            for j in range (0, )
 
     def __forward_pass(self) :
 
