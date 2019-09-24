@@ -36,7 +36,9 @@ class MiniBatch:
             
         
     def __sigmoid(self, v) :
-        return 1/(1 + math.exp(-v))def __generate_batch(self) :
+        return 1/(1 + math.exp(-v))
+        
+    def __generate_batch(self) :
         return 
 
     def __forward_pass(self) :
