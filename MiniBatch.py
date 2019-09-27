@@ -187,4 +187,8 @@ class MiniBatch:
         elif X.select_dtypes(exclude=['number']).empty :
             raise TypeError("X must be all number")
 
-        return
+        self.__batch_X = X
+        self.__forward_pass()
+        result = list(map(lambda x: x[1 + self.__hidden_layer][0], self.__outputs))
+
+        return result
