@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 class MiniBatch:
     # data structure
@@ -38,15 +39,44 @@ class MiniBatch:
 
     def __forward_pass(self) :
 
-    def __backward_pass(self) :
+    def __psi_apostrophe(self, value) :
+        return self.__sigmoid(value) * (1 - self.__sigmoid(value))
+
+    def __backward_pass(self, y_batch) :
+
+        # initialize errors to all zero
         self.__errors = []
+        
+        for i in range (0, self.__hidden_layer) :
+            self.__errors.append([0] * self.__nb_nodes)
+        
+        self.__errors.append([0])
+        
+        for idx, output in enumerate(self.__outputs) :
+            temp_error = []
 
-        # output layer
-        error = self.__sigmoid(self.__outputs[self.__hidden_layer]) * (1 - self.__sigmoid(self.__outputs[self.__hidden_layer])) * ()
+            # output layer
+            o_idx = self.__hidden_layer
+            o_predict = output[o_idx][0]
+            temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (y_batch[idx] - o_predict)])
 
-        # hidden layer
-        for i in range (len(self.__outputs) - 1, -1, -1) :
+            # hidden layer
+            # -1 karena index dimulai dari 0
+            for i in range (len(output) - 1, -1, -1) :
+                # perkalian matriks
+                matrix_error = np.matrix(temp_error[0])
+                matrix_weight = np.matrix(self.__weights[i])
 
+                result = matrix_weight.dot(matrix_error.T) 
+                result = np.squeeze(np.asarray(result.T)).tolist()
+
+                del result[0]
+
+                temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
+
+            # append output 
+            for i in range (self.__errors) :
+                self.__errors[i] = list(map(lambda x, y : x + y, self.__errors[i], temp_error[i]))
 
     def __update_weights(self) :
         
