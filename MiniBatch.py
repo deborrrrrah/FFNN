@@ -2,10 +2,9 @@ import random
 import numpy as np
 import pandas as pd
 import math
-import types
 
-NumberTypes = (types.IntType, types.LongType, types.FloatType, types.ComplexType)
-IntegerTypes = (types.IntType, types.LongType)
+IntegerTypes = (int)
+NumberTypes = (int, float)
 
 class MiniBatch:
     # data structure
@@ -18,6 +17,23 @@ class MiniBatch:
     __batch_y = []
 
     def __init__(self, nb_nodes, hidden_layer, batch_size, learning_rate, momentum, epoch) :
+        if not isinstance(nb_nodes, IntegerTypes) :
+            raise TypeError('nb_nodes must be a integer')
+        elif not isinstance(hidden_layer, IntegerTypes) :
+            raise TypeError('hidden_layer must be a integer')
+        elif not isinstance(learning_rate, NumberTypes) :
+            raise TypeError('learning_rate must be a number')
+        elif not isinstance(momentum, NumberTypes) :
+            raise TypeError('momentum must be a number')
+        elif not isinstance(epoch, IntegerTypes) :
+            raise TypeError('epoch must be a number')
+        elif learning_rate > 1 or learning_rate < 0 :
+            raise ValueError('learning_rate must be between 0 and 1')
+        elif momentum > 1 or momentum < 0 :
+            raise ValueError('momentum must be between 0 and 1')
+        elif hidden_layer > 10 or hidden_layer < 1 :
+            raise ValueError('hidden_layer minimum 1 and maximum 10')
+        
         self.__nb_nodes = nb_nodes
         self.__hidden_layer = hidden_layer
         self.__batch_size = batch_size
