@@ -112,7 +112,7 @@ class MiniBatch:
     def __update_weights(self) :
         return
 
-    def fit(self, X: pd.core.frame.DataFrame, y: list) -> list :
+    def fit(self, X, y) :
         # X is pandas.dataframe
         # y is pandas.series
 
@@ -121,6 +121,8 @@ class MiniBatch:
             raise TypeError("X must be a pandas.core.frame.DataFrame")
         elif not all(isinstance(x, IntegerTypes) for x in y) :
             raise TypeError("y must be a list of integer")
+        elif X.select_dtypes(exclude=['number']).empty :
+            raise TypeError("X must be all number")
 
         self.__X_train = X
         self.__y_train = y
@@ -140,5 +142,10 @@ class MiniBatch:
 
     def predict(self, X) :
         # X is pandas.dataframe
+
+        if not isinstance(X, pd.core.frame.DataFrame) :
+            raise TypeError("X must be a pandas.core.frame.DataFrame")
+        elif X.select_dtypes(exclude=['number']).empty :
+            raise TypeError("X must be all number")
 
         return
