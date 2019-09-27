@@ -2,10 +2,9 @@ import random
 import numpy as np
 import pandas as pd
 import math
-from types import IntType, LongType, FloatType
 
-NumberTypes = (IntType, LongType, FloatType)
-IntegerTypes = (IntType, LongType)
+IntegerTypes = (int)
+NumberTypes = (int, float)
 
 class MiniBatch:
     # data structure
