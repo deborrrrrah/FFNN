@@ -54,13 +54,16 @@ class MiniBatch:
         
     def __generate_batch(self) :
         total_row = len(self.__X_train)
-        self.__n_batches = total_row/self.__batch_size
 
-        indexes = [x for x in range(0, total_row)]
+        index = [x for x in range(0, total_row)]
+        self.__indexes = []
 
-        random.shuffle(indexes)
+        random.shuffle(index)
 
-
+        while len(index) > self.__batch_size :
+            temp = [index.pop(), index.pop(), index.pop()]
+            self.__indexes.append(temp)
+        self.__indexes.append(index)
 
     def __forward_pass(self) :
         self.__outputs = []
@@ -72,7 +75,7 @@ class MiniBatch:
                 for j in range (0, self.__n_nodes[i]) :
                     v = v + self.__weights[i][j][i]
 
-    def __backward_pass(self, y_batch) :
+    def __backward_pass(self) :
 
         # initialize errors to all zero
         self.__errors = []
@@ -83,7 +86,7 @@ class MiniBatch:
             # output layer
             o_idx = self.__hidden_layer
             o_predict = output[o_idx][0]
-            temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (y_batch[idx] - o_predict)])
+            temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict)])
 
             # hidden layer
             # -1 karena index dimulai dari 0
@@ -115,9 +118,9 @@ class MiniBatch:
         for i in range (self.__epoch) :
             self.__generate_batch()
 
-            for i in range (self.__n_batches) :
-                self.__batch_X = self.__batches_X[i]
-                self.__batch_y = self.__batches_y[i]
+            for j in range (len(self.__indexes)) :
+                self.__batch_X = [self.__X_train[x] for x in self.__indexes[j]]
+                self.__batch_y = [self.__y_train[x] for x in self.__indexes[j]]
                 self.__forward_pass()
                 self.__backward_pass()
                 self.__update_weights()
