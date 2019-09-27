@@ -24,14 +24,14 @@ class MiniBatch:
         self.__weights = []
 
         # number of nodes for each layer
-        n_nodes = [self.__n_features] + [self.__nb_nodes] * self.__hidden_layer + [1] # 1 for output
+        self.__n_nodes = [self.__n_features] + [self.__nb_nodes] * self.__hidden_layer + [1] # 1 for output
 
         for i in range (0, self.__hidden_layer - 1) :
             b = []
-            for j in range (0, n_nodes[i] + 1) :
+            for j in range (0, self.__n_nodes[i] + 1) :
                 # index 0 for bias
                 c = []
-                for k in range (0, n_nodes[i + 1]) :
+                for k in range (0, self.__n_nodes[i + 1]) :
                     c.append(random.random())
                 b.append(c)
             self.__weights.append(b)
@@ -39,6 +39,9 @@ class MiniBatch:
         
     def __sigmoid(self, v) :
         return 1/(1 + math.exp(-v))
+
+    def __psi_apostrophe(self, value) :
+        return self.__sigmoid(value) * (1 - self.__sigmoid(value))
         
     def __generate_batch(self) :
         return 
@@ -48,13 +51,10 @@ class MiniBatch:
         
         for i in range (0, self.__hidden_layer) : # last index for output
             b = [] # for output in each layer
-            for j in range (0, n_nodes[i+1]) :
+            for j in range (0, self.__n_nodes[i+1]) :
                 v = 0 # output value before using activation function 
-                for j in range (0, n_nodes[i]) :
+                for j in range (0, self.__n_nodes[i]) :
                     v = v + self.__weights[i][j][i]
-
-    def __psi_apostrophe(self, value) :
-        return self.__sigmoid(value) * (1 - self.__sigmoid(value))
 
     def __backward_pass(self, y_batch) :
 
@@ -93,6 +93,7 @@ class MiniBatch:
                 self.__errors[i] = list(map(lambda x, y : x + y, self.__errors[i], temp_error[i]))
 
     def __update_weights(self) :
+        return
 
     def fit(self, X, y) :
         # X is pandas.dataframe
