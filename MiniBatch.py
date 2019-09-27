@@ -1,6 +1,11 @@
 import random
 import numpy as np
+import pandas as pd
 import math
+import types
+
+NumberTypes = (types.IntType, types.LongType, types.FloatType, types.ComplexType)
+IntegerTypes = (types.IntType, types.LongType)
 
 class MiniBatch:
     # data structure
@@ -9,8 +14,7 @@ class MiniBatch:
     __outputs = []
     __weights = []
     __weights_bef = []
-    __n_batches = 0
-    __batch_X = []
+    __batch_X = [] # pandas dataframe
     __batch_y = []
 
     def __init__(self, nb_nodes, hidden_layer, batch_size, learning_rate, momentum, epoch) :
@@ -108,18 +112,25 @@ class MiniBatch:
     def __update_weights(self) :
         return
 
-    def fit(self, X, y) :
+    def fit(self, X: pd.core.frame.DataFrame, y: list) -> list :
         # X is pandas.dataframe
         # y is pandas.series
+
+        # raise error
+        if not isinstance(X, pd.core.frame.DataFrame) :
+            raise TypeError("X must be a pandas.core.frame.DataFrame")
+        elif not all(isinstance(x, IntegerTypes) for x in y) :
+            raise TypeError("y must be a list of integer")
+
         self.__X_train = X
         self.__y_train = y
         self.__random_weights()
 
-        for i in range (self.__epoch) :
+        for _ in range (self.__epoch) :
             self.__generate_batch()
 
             for j in range (len(self.__indexes)) :
-                self.__batch_X = [self.__X_train[x] for x in self.__indexes[j]]
+                self.__batch_X = X.iloc[self.__indexes[j], :]
                 self.__batch_y = [self.__y_train[x] for x in self.__indexes[j]]
                 self.__forward_pass()
                 self.__backward_pass()
