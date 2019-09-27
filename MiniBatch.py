@@ -9,6 +9,9 @@ class MiniBatch:
     __outputs = []
     __weights = []
     __weights_bef = []
+    __n_batches = 0
+    __batch_X = []
+    __batch_y = []
 
     def __init__(self, nb_nodes, hidden_layer, batch_size, learning_rate, momentum, epoch) :
         self.__nb_nodes = nb_nodes
@@ -50,7 +53,14 @@ class MiniBatch:
         return value * (1 - value)
         
     def __generate_batch(self) :
-        return 
+        total_row = len(self.__X_train)
+        self.__n_batches = total_row/self.__batch_size
+
+        indexes = [x for x in range(0, total_row)]
+
+        random.shuffle(indexes)
+
+
 
     def __forward_pass(self) :
         self.__outputs = []
@@ -66,11 +76,6 @@ class MiniBatch:
 
         # initialize errors to all zero
         self.__errors = []
-        
-        for i in range (0, self.__hidden_layer) :
-            self.__errors.append([0] * self.__nb_nodes)
-        
-        self.__errors.append([0])
         
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
@@ -94,9 +99,8 @@ class MiniBatch:
 
                 temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
 
-            # append output 
-            for i in range (self.__errors) :
-                self.__errors[i] = list(map(lambda x, y : x + y, self.__errors[i], temp_error[i]))
+            # append output
+            self.__errors.append(temp_error) 
 
     def __update_weights(self) :
         return
@@ -107,13 +111,16 @@ class MiniBatch:
         self.__X_train = X
         self.__y_train = y
         self.__random_weights()
-        batches = self.__generate_batch()
 
-        for batch in batches :
-            self.__batch = batch
-            self.__forward_pass()
-            self.__backward_pass()
-            self.__update_weights()
+        for i in range (self.__epoch) :
+            self.__generate_batch()
+
+            for i in range (self.__n_batches) :
+                self.__batch_X = self.__batches_X[i]
+                self.__batch_y = self.__batches_y[i]
+                self.__forward_pass()
+                self.__backward_pass()
+                self.__update_weights()
 
         return
 
