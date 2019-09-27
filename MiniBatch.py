@@ -110,7 +110,31 @@ class MiniBatch:
             self.__errors.append(temp_error) 
 
     def __update_weights(self) :
-        return
+        temp_weights = []
+
+        # delta weight
+        delta_weights = []
+        for i in range(len(self._weights)) :
+            delta_weight = []
+            for j in range(len(self.__weights[i])):
+                deltas = []
+                for k in range(len(self.__weights[i][j])) :
+                    delta = 0
+                    for idx, output in enumerate(self.__outputs) :
+                        output.insert(0, self.__batch_X.iloc[idx].tolist())
+                        delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * output[idx][i][j])
+                    deltas.append(delta)
+                delta_weight.append(deltas)
+            delta_weights.append(delta_weights)
+
+        # update weight
+        for i in range(len(self.__weights)) :
+            for j in range(len(self.__weights[i])) :
+                for k in range(len(self.__weights[i][j])) :
+                    temp_weights[i][j][k] = self.__weights[i][j][k] + delta_weights[i][j][k]
+
+        self.__weights_bef = self.__weights
+        self.__weights = temp_weights
 
     def fit(self, X, y) :
         # X is pandas.dataframe
