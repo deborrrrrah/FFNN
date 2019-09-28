@@ -86,14 +86,25 @@ class MiniBatch:
         self.__indexes.append(index)
 
     def __forward_pass(self) :
-        self.__outputs = []
+        self.__outputs = [] # initialize output to zero
         
-        for i in range (0, self.__hidden_layer) : # last index for output
-            b = [] # for output in each layer
-            for j in range (0, self.__n_nodes[i+1]) :
-                v = 0 # output value before using activation function 
-                for j in range (0, self.__n_nodes[i]) :
-                    v = v + self.__weights[i][j][i]
+        for row_idx in range(self.__batch_size) : # iterate for each row
+            row = [] # for output in each row
+            
+			for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
+                layer = [] # for output in each layer 
+                
+				for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+					node_v = 0
+					
+                    node_v = self.__weights[layer_idx][0][node_idx]
+					for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+						node_v = node_v + (self.batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+					
+					layer.append(node_v)
+				row.append(layer)
+				
+			self.__outputs.append(row)
 
     def __backward_pass(self) :
 
