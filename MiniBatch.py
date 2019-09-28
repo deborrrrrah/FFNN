@@ -91,20 +91,20 @@ class MiniBatch:
         for row_idx in range(self.__batch_size) : # iterate for each row
             row = [] # for output in each row
             
-			for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
-                layer = [] # for output in each layer 
-                
-				for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
-					node_v = 0
-					
-                    node_v = self.__weights[layer_idx][0][node_idx]
-					for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-						node_v = node_v + (self.batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
-					
-					layer.append(node_v)
-				row.append(layer)
-				
-			self.__outputs.append(row)
+	    for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
+	        layer = [] # for output in each layer 
+
+		for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+		    node_v = 0
+
+		    node_v = self.__weights[layer_idx][0][node_idx]
+		    for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+			node_v = node_v + (self.batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+
+		    layer.append(node_v)
+		row.append(layer)
+
+	    self.__outputs.append(row)
 
     def __backward_pass(self) :
 
