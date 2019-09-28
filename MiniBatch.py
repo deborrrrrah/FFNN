@@ -94,11 +94,11 @@ class MiniBatch:
         for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
             layer = [] # for output in each layer 
 
-        for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+        for node_idx in range (self.__n_nodes[layer_idx + 1]) : # iterate for each node in output layer
             node_v = 0
 
             node_v = self.__weights[layer_idx][0][node_idx]
-            for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+            for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                 node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
             layer.append(node_v)
@@ -141,7 +141,7 @@ class MiniBatch:
 
         # delta weight
         delta_weights = []
-        for i in range(len(self._weights)) :
+        for i in range(len(self.__weights)) :
             delta_weight = []
             for j in range(len(self.__weights[i])):
                 deltas = []
@@ -167,6 +167,10 @@ class MiniBatch:
         # X is pandas.dataframe
         # y is pandas.series
 
+        if isinstance(y, pd.core.series.Series) :
+            y = y.tolist()
+            print(y)
+
         # raise error
         # if not isinstance(X, pd.core.frame.DataFrame) :
         #     raise TypeError("X must be a pandas.core.frame.DataFrame")
@@ -181,10 +185,6 @@ class MiniBatch:
 
         for _ in range (self.__epoch) :
             self.__generate_batch()
-            print (self.__indexes)
-            print (self.__y_train)
-            print (type(self.__y_train))
-            print (self.__y_train[1])
             for j in range (len(self.__indexes)) :
                 self.__batch_X = X.iloc[self.__indexes[j], :]
                 self.__batch_y = [self.__y_train[x] for x in self.__indexes[j]]
