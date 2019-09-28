@@ -91,20 +91,20 @@ class MiniBatch:
         for row_idx in range(self.__batch_size) : # iterate for each row
             row = [] # for output in each row
             
-	    for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
-	        layer = [] # for output in each layer 
+        for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
+            layer = [] # for output in each layer 
 
-		for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
-		    node_v = 0
+        for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+            node_v = 0
 
-		    node_v = self.__weights[layer_idx][0][node_idx]
-		    for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-			node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+            node_v = self.__weights[layer_idx][0][node_idx]
+            for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+                node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
-		    layer.append(node_v)
-		row.append(layer)
+            layer.append(node_v)
+        row.append(layer)
 
-	    self.__outputs.append(row)
+        self.__outputs.append(row)
 
     def __backward_pass(self) :
 
@@ -168,12 +168,12 @@ class MiniBatch:
         # y is pandas.series
 
         # raise error
-        if not isinstance(X, pd.core.frame.DataFrame) :
-            raise TypeError("X must be a pandas.core.frame.DataFrame")
-        elif not all(isinstance(x, IntegerTypes) for x in y) :
-            raise TypeError("y must be a list of integer")
-        elif X.select_dtypes(exclude=['number']).empty :
-            raise TypeError("X must be all number")
+        # if not isinstance(X, pd.core.frame.DataFrame) :
+        #     raise TypeError("X must be a pandas.core.frame.DataFrame")
+        # elif not all(isinstance(x, IntegerTypes) for x in y) :
+        #     raise TypeError("y must be a list of integer")
+        # elif X.select_dtypes(exclude=['number']).empty :
+        #     raise TypeError("X must be all number")
 
         self.__X_train = X
         self.__y_train = y
@@ -181,7 +181,10 @@ class MiniBatch:
 
         for _ in range (self.__epoch) :
             self.__generate_batch()
-
+            print (self.__indexes)
+            print (self.__y_train)
+            print (type(self.__y_train))
+            print (self.__y_train[1])
             for j in range (len(self.__indexes)) :
                 self.__batch_X = X.iloc[self.__indexes[j], :]
                 self.__batch_y = [self.__y_train[x] for x in self.__indexes[j]]
@@ -192,10 +195,10 @@ class MiniBatch:
     def predict(self, X) :
         # X is pandas.dataframe
 
-        if not isinstance(X, pd.core.frame.DataFrame) :
-            raise TypeError("X must be a pandas.core.frame.DataFrame")
-        elif X.select_dtypes(exclude=['number']).empty :
-            raise TypeError("X must be all number")
+        # if not isinstance(X, pd.core.frame.DataFrame) :
+        #     raise TypeError("X must be a pandas.core.frame.DataFrame")
+        # elif X.select_dtypes(exclude=['number']).empty :
+        #     raise TypeError("X must be all number")
 
         self.__batch_X = X
         self.__forward_pass()
