@@ -33,7 +33,7 @@ class MiniBatch:
             raise ValueError('momentum must be between 0 and 1')
         elif hidden_layer > 10 or hidden_layer < 1 :
             raise ValueError('hidden_layer minimum 1 and maximum 10')
-        
+
         self.__nb_nodes = nb_nodes
         self.__hidden_layer = hidden_layer
         self.__batch_size = batch_size
@@ -65,13 +65,13 @@ class MiniBatch:
                 b_bef.append(c_bef)
             self.__weights.append(b)
             self.__weights_bef.append(b_bef)
-        
+
     def __sigmoid(self, v) :
         return 1/(1 + math.exp(-v))
 
     def __psi_apostrophe(self, value) :
         return value * (1 - value)
-        
+
     def __generate_batch(self) :
         total_row = len(self.__X_train)
 
@@ -87,30 +87,29 @@ class MiniBatch:
 
     def __forward_pass(self) :
         self.__outputs = [] # initialize output to zero
-        
+
         for row_idx in range(self.__batch_size) : # iterate for each row
             row = [] # for output in each row
-            
-	    for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
-	        layer = [] # for output in each layer 
 
-		for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
-		    node_v = 0
+            for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer
+                layer = [] # for output in each layer
 
-		    node_v = self.__weights[layer_idx][0][node_idx]
-		    for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-			node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+                for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+                    node_v = 0
 
-		    layer.append(node_v)
-		row.append(layer)
+                    node_v = self.__weights[layer_idx][0][node_idx]
+                    for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+                        node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
-	    self.__outputs.append(row)
+                layer.append(node_v)
+            row.append(layer)
+        self.__outputs.append(row)
 
     def __backward_pass(self) :
 
         # initialize errors to all zero
         self.__errors = []
-        
+
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
 
@@ -126,7 +125,7 @@ class MiniBatch:
                 matrix_error = np.matrix(temp_error[0])
                 matrix_weight = np.matrix(self.__weights[i])
 
-                result = matrix_weight.dot(matrix_error.T) 
+                result = matrix_weight.dot(matrix_error.T)
                 result = np.squeeze(np.asarray(result.T)).tolist()
 
                 del result[0]
@@ -134,7 +133,7 @@ class MiniBatch:
                 temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
 
             # append output
-            self.__errors.append(temp_error) 
+            self.__errors.append(temp_error)
 
     def __update_weights(self) :
         temp_weights = []
