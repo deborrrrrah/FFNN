@@ -81,7 +81,9 @@ class MiniBatch:
         random.shuffle(index)
 
         while len(index) >= self.__batch_size :
-            temp = [index.pop(), index.pop(), index.pop()]
+            temp = []
+            for i in range (self.__batch_size) :
+                temp.append(index.pop())
             self.__indexes.append(temp)
         self.__indexes.append(index)
 
@@ -90,7 +92,7 @@ class MiniBatch:
 
         self.__outputs = [] # initialize output to zero
 
-        for row_idx in range(self.__batch_size) : # iterate for each row
+        for row_idx in range(len(self.__batch_X)) : # iterate for each row
             row = [] # for output in each row
 
             for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer
