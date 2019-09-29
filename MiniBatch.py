@@ -102,8 +102,12 @@ class MiniBatch:
                     node_v = self.__weights[layer_idx][0][node_idx]
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                         node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+<<<<<<< HEAD
 
                     layer.append(self.__sigmoid(node_v))
+=======
+                    layer.append(node_v)
+>>>>>>> bb337d9deaaabff2f51446523f1ba502e39e083c
                 row.append(layer)
         self.__outputs.append(row)
 
