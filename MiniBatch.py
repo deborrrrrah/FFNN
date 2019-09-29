@@ -59,7 +59,7 @@ class MiniBatch:
                 c = []
                 c_bef = []
                 for _ in range (0, self.__n_nodes[i + 1]) :
-                    c.append(random.random())
+                    c.append(random.uniform(-1, 1))
                     c_bef.append(0)
                 b.append(c)
                 b_bef.append(c_bef)
