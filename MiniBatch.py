@@ -92,6 +92,8 @@ class MiniBatch:
 
         self.__outputs = [] # initialize output to zero
 
+        # print('len batch ', len(self.__batch_X))
+
         for row_idx in range(len(self.__batch_X)) : # iterate for each row
             row = [] # for output in each row
 
@@ -105,9 +107,11 @@ class MiniBatch:
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                         node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
+                    print(node_v)
                     layer.append(self.__sigmoid(node_v))
                 row.append(layer)
-        self.__outputs.append(row)
+            self.__outputs.append(row)
+        print(self.__outputs)
 
     def __backward_pass(self) :
         #print(self.__batch_X, "\n\n")
@@ -159,15 +163,9 @@ class MiniBatch:
             self.__errors.append(temp_error)
 
     def __update_weights(self) :
-        temp_weights = []
+        temp_weights = self.__weights
 
         # delta weight
-
-        print (self.__weights)
-        print ()
-        print (self.__errors)
-        print ()
-        print (self.__outputs)
         delta_weights = []
         for i in range(len(self.__weights)) : # iterate layer
             delta_weight = []
@@ -176,27 +174,23 @@ class MiniBatch:
                 for k in range(len(self.__weights[i][j])) : # iterate node output
                     delta = 0
                     for idx in range (len(self.__outputs)) :
-                        print(i, " ", j, " ", k)
                         self.__outputs[idx].insert(0, self.__batch_X.iloc[idx].tolist())
-                        print(len(self.__outputs[idx][i]))
-                        print (idx)
-                        print (i)
-                        print (j)
-                        print (k)
-                        print ('ganti iterasi')
+                        self.__outputs[idx][i].insert(0, 1)
                         delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * self.__outputs[idx][i][j])
-
                         del self.__outputs[idx][0]
                     deltas.append(delta)
                 delta_weight.append(deltas)
-            delta_weights.append(delta_weights)
+            delta_weights.append(delta_weight)
 
+        # print (delta_weights)
         # update weight
         for i in range(len(self.__weights)) :
             for j in range(len(self.__weights[i])) :
                 for k in range(len(self.__weights[i][j])) :
+                    # print (i, " ", j, " ", k)
+                    # print (self.__weights[i][j][k])
+                    # print (delta_weights[i][j][k])
                     temp_weights[i][j][k] = self.__weights[i][j][k] + delta_weights[i][j][k]
-
         self.__weights_bef = self.__weights
         self.__weights = temp_weights
 
@@ -239,6 +233,7 @@ class MiniBatch:
 
         self.__batch_X = X
         self.__forward_pass()
-        result = list(map(lambda x: x[1 + self.__hidden_layer][0], self.__outputs))
+        # print (self.__outputs)
+        result = list(map(lambda x: x[self.__hidden_layer][0], self.__outputs))
 
         return result
