@@ -51,7 +51,7 @@ class MiniBatch:
         # number of nodes for each layer
         self.__n_nodes = [self.__n_features] + [self.__nb_nodes] * self.__hidden_layer + [1] # 1 for output
 
-        for i in range (0, self.__hidden_layer - 1) :
+        for i in range (0, self.__hidden_layer + 1) :
             b = []
             b_bef = []
             for _ in range (0, self.__n_nodes[i] + 1) :
@@ -75,51 +75,36 @@ class MiniBatch:
     def __generate_batch(self) :
         total_row = len(self.__X_train)
 
-        index = [x for x in range(0, total_row)]
+        index = [x for x in range(total_row)]
         self.__indexes = []
 
         random.shuffle(index)
 
-        while len(index) > self.__batch_size :
+        while len(index) >= self.__batch_size :
             temp = [index.pop(), index.pop(), index.pop()]
             self.__indexes.append(temp)
         self.__indexes.append(index)
 
     def __forward_pass(self) :
+        batch = self.__batch_X.values
+
         self.__outputs = [] # initialize output to zero
 
         for row_idx in range(self.__batch_size) : # iterate for each row
             row = [] # for output in each row
-<<<<<<< HEAD
 
             for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer
                 layer = [] # for output in each layer
 
-                for node_idx in range (n_nodes[layer_idx + 1]) : # iterate for each node in output layer
+                for node_idx in range (self.__n_nodes[layer_idx + 1]) : # iterate for each node in output layer
                     node_v = 0
 
                     node_v = self.__weights[layer_idx][0][node_idx]
-                    for input_idx in range(n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-                        node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+                    for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
+                        node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
                 layer.append(node_v)
             row.append(layer)
-=======
-            
-        for layer_idx in range (self.__hidden_layer + 1) : # iterate for each layer 
-            layer = [] # for output in each layer 
-
-        for node_idx in range (self.__n_nodes[layer_idx + 1]) : # iterate for each node in output layer
-            node_v = 0
-
-            node_v = self.__weights[layer_idx][0][node_idx]
-            for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-                node_v = node_v + (self.__batch_X[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
-
-            layer.append(node_v)
-        row.append(layer)
-
->>>>>>> 563657b2a7f035b8e54515ee502cd425ff879937
         self.__outputs.append(row)
 
     def __backward_pass(self) :
@@ -185,7 +170,7 @@ class MiniBatch:
 
         if isinstance(y, pd.core.series.Series) :
             y = y.tolist()
-            print(y)
+            # print(y)
 
         # raise error
         # if not isinstance(X, pd.core.frame.DataFrame) :
