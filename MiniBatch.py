@@ -102,15 +102,16 @@ class MiniBatch:
                     node_v = self.__weights[layer_idx][0][node_idx]
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                         node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
-
-                layer.append(node_v)
-            row.append(layer)
+                    layer.append(node_v)
+                row.append(layer)
         self.__outputs.append(row)
 
     def __backward_pass(self) :
 
         # initialize errors to all zero
         self.__errors = []
+
+        print (self.__outputs)
 
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
