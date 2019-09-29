@@ -115,7 +115,7 @@ class MiniBatch:
         # initialize errors to all zero
         self.__errors = []
 
-        print (self.__outputs)
+        # print (self.__outputs)
 
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
@@ -135,7 +135,7 @@ class MiniBatch:
             for i in range (len(output) -2, -1, -1) :
                 #print("index : ", i)
 
-                print(i, " ", len(output), " ", len(self.__weights))
+                # print(i, " ", len(output), " ", len(self.__weights))
                 # print(temp_error[0])
 
                 # perkalian matriks
@@ -150,8 +150,8 @@ class MiniBatch:
 
                 del result[0]
 
-                print(result)
-                print(output[i])
+                # print(result)
+                # print(output[i])
 
                 temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
 
@@ -162,6 +162,12 @@ class MiniBatch:
         temp_weights = []
 
         # delta weight
+
+        print (self.__weights)
+        print ()
+        print (self.__errors)
+        print ()
+        print (self.__outputs)
         delta_weights = []
         for i in range(len(self.__weights)) : # iterate layer
             delta_weight = []
@@ -173,6 +179,11 @@ class MiniBatch:
                         print(i, " ", j, " ", k)
                         self.__outputs[idx].insert(0, self.__batch_X.iloc[idx].tolist())
                         print(len(self.__outputs[idx][i]))
+                        print (idx)
+                        print (i)
+                        print (j)
+                        print (k)
+                        print ('ganti iterasi')
                         delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * self.__outputs[idx][i][j])
 
                         del self.__outputs[idx][0]
