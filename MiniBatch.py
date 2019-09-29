@@ -163,15 +163,19 @@ class MiniBatch:
 
         # delta weight
         delta_weights = []
-        for i in range(len(self.__weights)) :
+        for i in range(len(self.__weights)) : # iterate layer
             delta_weight = []
-            for j in range(len(self.__weights[i])):
+            for j in range(len(self.__weights[i])): # iterate node input
                 deltas = []
-                for k in range(len(self.__weights[i][j])) :
+                for k in range(len(self.__weights[i][j])) : # iterate node output
                     delta = 0
                     for idx in range (len(self.__outputs)) :
+                        print(i, " ", j, " ", k)
                         self.__outputs[idx].insert(0, self.__batch_X.iloc[idx].tolist())
+                        print(len(self.__outputs[idx][i]))
                         delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * self.__outputs[idx][i][j])
+
+                        del self.__outputs[idx][0]
                     deltas.append(delta)
                 delta_weight.append(deltas)
             delta_weights.append(delta_weights)
