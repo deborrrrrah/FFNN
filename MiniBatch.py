@@ -128,13 +128,17 @@ class MiniBatch:
             #print("output : ", output)
 
             # hidden layer
-            # -1 karena index dimulai dari 0
-            for i in range (len(output) -1, -1, -1) :
+            # -2 dari -1 karena index dimulai dari 0
+            #         -1 karena tidak pakai output dari layer output
+            for i in range (len(output) -2, -1, -1) :
                 #print("index : ", i)
+
+                print(i, " ", len(output), " ", len(self.__weights))
+                # print(temp_error[0])
 
                 # perkalian matriks
                 matrix_error = np.matrix(temp_error[0])
-                matrix_weight = np.matrix(self.__weights[i])
+                matrix_weight = np.matrix(self.__weights[i + 1])
 
                 #print("matrix_error : ", matrix_error)
                 #print("matrix_weight : ", matrix_weight)
@@ -143,6 +147,9 @@ class MiniBatch:
                 result = np.squeeze(np.asarray(result.T)).tolist()
 
                 del result[0]
+
+                print(result)
+                print(output[i])
 
                 temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
 
