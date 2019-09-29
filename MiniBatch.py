@@ -87,12 +87,10 @@ class MiniBatch:
             self.__indexes.append(temp)
         self.__indexes.append(index)
 
-    def __forward_pass(self) :
+    def __forward_pass(self, is_sigmoid) :
         batch = self.__batch_X.values
 
         self.__outputs = [] # initialize output to zero
-
-        # print('len batch ', len(self.__batch_X))
 
         for row_idx in range(len(self.__batch_X)) : # iterate for each row
             row = [] # for output in each row
@@ -107,55 +105,43 @@ class MiniBatch:
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                         node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
-                    print(node_v)
-                    layer.append(self.__sigmoid(node_v))
+                    if layer_idx == self.__hidden_layer :
+                        if is_sigmoid :
+                            node_v = self.__sigmoid(node_v)
+                        else :
+                            node_v = round(self.__sigmoid(node_v))
+                    else :
+                        node_v = self.__sigmoid(node_v)
+
+                    layer.append(node_v)
                 row.append(layer)
             self.__outputs.append(row)
-        print(self.__outputs)
 
     def __backward_pass(self) :
-        #print(self.__batch_X, "\n\n")
-        #print("self.__batch_y : ", self.__batch_y, "\n\n")
         # initialize errors to all zero
         self.__errors = []
 
-        # print (self.__outputs)
-
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
-            index = list(self.__batch_X.index.values)
-            #print(index[idx])
             # output layer
             o_idx = self.__hidden_layer
             o_predict = output[o_idx][0]
-            #print("error for output : ", self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict))
+            print(self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict))
             temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict)]) # for error output layer
-
-            #print("output : ", output)
 
             # hidden layer
             # -2 dari -1 karena index dimulai dari 0
             #         -1 karena tidak pakai output dari layer output
             for i in range (len(output) -2, -1, -1) :
-                #print("index : ", i)
-
-                # print(i, " ", len(output), " ", len(self.__weights))
-                # print(temp_error[0])
 
                 # perkalian matriks
                 matrix_error = np.matrix(temp_error[0])
                 matrix_weight = np.matrix(self.__weights[i + 1])
 
-                #print("matrix_error : ", matrix_error)
-                #print("matrix_weight : ", matrix_weight)
-
                 result = matrix_weight.dot(matrix_error.T)
                 result = np.squeeze(np.asarray(result.T)).tolist()
 
                 del result[0]
-
-                # print(result)
-                # print(output[i])
 
                 temp_error.insert(0, list(map(lambda x, y: self.__psi_apostrophe(x) + y, output[i], result)))
 
@@ -182,14 +168,10 @@ class MiniBatch:
                 delta_weight.append(deltas)
             delta_weights.append(delta_weight)
 
-        # print (delta_weights)
         # update weight
         for i in range(len(self.__weights)) :
             for j in range(len(self.__weights[i])) :
                 for k in range(len(self.__weights[i][j])) :
-                    # print (i, " ", j, " ", k)
-                    # print (self.__weights[i][j][k])
-                    # print (delta_weights[i][j][k])
                     temp_weights[i][j][k] = self.__weights[i][j][k] + delta_weights[i][j][k]
         self.__weights_bef = self.__weights
         self.__weights = temp_weights
@@ -200,7 +182,6 @@ class MiniBatch:
 
         if isinstance(y, pd.core.series.Series) :
             y = y.tolist()
-            # print(y)
 
         # raise error
         # if not isinstance(X, pd.core.frame.DataFrame) :
@@ -219,7 +200,7 @@ class MiniBatch:
             for j in range (len(self.__indexes)) :
                 self.__batch_X = X.iloc[self.__indexes[j], :]
                 self.__batch_y = [self.__y_train[x] for x in self.__indexes[j]]
-                self.__forward_pass()
+                self.__forward_pass(True)
                 self.__backward_pass()
                 self.__update_weights()
 
@@ -232,8 +213,8 @@ class MiniBatch:
         #     raise TypeError("X must be all number")
 
         self.__batch_X = X
-        self.__forward_pass()
-        # print (self.__outputs)
-        result = list(map(lambda x: x[self.__hidden_layer][0], self.__outputs))
+        self.__forward_pass(False)
+        result = list(map(lambda x: round(x[self.__hidden_layer][0]), self.__outputs))
 
+        print(result)
         return result
