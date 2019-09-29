@@ -113,6 +113,8 @@ class MiniBatch:
         # initialize errors to all zero
         self.__errors = []
 
+        print (self.__outputs)
+
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
             index = list(self.__batch_X.index.values)
