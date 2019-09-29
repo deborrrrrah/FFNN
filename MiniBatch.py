@@ -169,9 +169,9 @@ class MiniBatch:
                 deltas = []
                 for k in range(len(self.__weights[i][j])) :
                     delta = 0
-                    for idx, output in enumerate(self.__outputs) :
-                        output.insert(0, self.__batch_X.iloc[idx].tolist())
-                        delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * output[idx][i][j])
+                    for idx in range (len(self.__outputs)) :
+                        self.__outputs[idx].insert(0, self.__batch_X.iloc[idx].tolist())
+                        delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * self.__outputs[idx][i][j])
                     deltas.append(delta)
                 delta_weight.append(deltas)
             delta_weights.append(delta_weights)
