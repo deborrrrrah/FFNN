@@ -103,29 +103,39 @@ class MiniBatch:
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
                         node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
 
-                layer.append(node_v)
-            row.append(layer)
+                    layer.append(self.__sigmoid(node_v))
+                row.append(layer)
         self.__outputs.append(row)
 
     def __backward_pass(self) :
-
+        #print(self.__batch_X, "\n\n")
+        #print("self.__batch_y : ", self.__batch_y, "\n\n")
         # initialize errors to all zero
         self.__errors = []
 
         for idx, output in enumerate(self.__outputs) :
             temp_error = []
-
+            index = list(self.__batch_X.index.values)
+            #print(index[idx])
             # output layer
             o_idx = self.__hidden_layer
             o_predict = output[o_idx][0]
-            temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict)])
+            #print("error for output : ", self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict))
+            temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict)]) # for error output layer
+
+            #print("output : ", output)
 
             # hidden layer
             # -1 karena index dimulai dari 0
-            for i in range (len(output) - 1, -1, -1) :
+            for i in range (len(output) -1, -1, -1) :
+                #print("index : ", i)
+
                 # perkalian matriks
                 matrix_error = np.matrix(temp_error[0])
                 matrix_weight = np.matrix(self.__weights[i])
+
+                #print("matrix_error : ", matrix_error)
+                #print("matrix_weight : ", matrix_weight)
 
                 result = matrix_weight.dot(matrix_error.T)
                 result = np.squeeze(np.asarray(result.T)).tolist()
