@@ -67,7 +67,7 @@ class MiniBatch:
             self.__weights_bef.append(b_bef)
 
     def __sigmoid(self, v) :
-        return 1/(1 + math.exp(-v))
+        return 1/(1 + np.exp(-v))
 
     def __psi_apostrophe(self, value) :
         return value * (1 - value)
@@ -111,6 +111,7 @@ class MiniBatch:
                         else :
                             node_v = round(self.__sigmoid(node_v))
                     else :
+                        # print (node_v)
                         node_v = self.__sigmoid(node_v)
 
                     layer.append(node_v)
@@ -126,7 +127,7 @@ class MiniBatch:
             # output layer
             o_idx = self.__hidden_layer
             o_predict = output[o_idx][0]
-            print(self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict))
+            # print(self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict))
             temp_error.insert(0, [self.__psi_apostrophe(o_predict) * (self.__batch_y[idx] - o_predict)]) # for error output layer
 
             # hidden layer
@@ -158,8 +159,8 @@ class MiniBatch:
             for j in range(len(self.__weights[i])): # iterate node input
                 deltas = []
                 for k in range(len(self.__weights[i][j])) : # iterate node output
-                    delta = 0
-                    for idx in range (len(self.__outputs)) :
+                    delta = 0 # variable to sum all delta weight
+                    for idx in range (len(self.__outputs)) : # iterate row in a batch
                         self.__outputs[idx].insert(0, self.__batch_X.iloc[idx].tolist())
                         self.__outputs[idx][i].insert(0, 1)
                         delta += (self.__momentum * self.__weights_bef[i][j][k]) + (self.__learning_rate * self.__errors[idx][i][k] * self.__outputs[idx][i][j])
@@ -215,6 +216,4 @@ class MiniBatch:
         self.__batch_X = X
         self.__forward_pass(False)
         result = list(map(lambda x: round(x[self.__hidden_layer][0]), self.__outputs))
-
-        print(result)
         return result
