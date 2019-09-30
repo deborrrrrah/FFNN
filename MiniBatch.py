@@ -123,11 +123,11 @@ class MiniBatch:
 
                     if layer_idx == self.__hidden_layer :
                         if is_train :
-                            node_v = self.__sigmoid(node_v)
+                            node_v = round(self.__sigmoid(node_v))
+                            # node_v = self.__sigmoid(node_v)
                         else :
-                            # print("output ", self.__sigmoid(node_v))
-                            # node_v = round(self.__sigmoid(node_v))
-                            node_v = self.__sigmoid(node_v)
+                            print("output ", self.__sigmoid(node_v))
+                            node_v = round(self.__sigmoid(node_v))
                     else :
                         node_v = self.__sigmoid(node_v)
 
