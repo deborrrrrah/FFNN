@@ -87,7 +87,7 @@ class MiniBatch:
             self.__indexes.append(temp)
         self.__indexes.append(index)
 
-    def __forward_pass(self, is_sigmoid) :
+    def __forward_pass(self, is_predict) :
         batch = self.__batch_X.values
 
         self.__outputs = [] # initialize output to zero
@@ -100,7 +100,7 @@ class MiniBatch:
 
                 for node_idx in range (self.__n_nodes[layer_idx + 1]) : # iterate for each node in output layer
                     node_v = 0
-                    
+
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for 
                         input_value = 0
                         if input_idx == 0 : # bias
@@ -114,7 +114,7 @@ class MiniBatch:
                         node_v += input_value * self.__weights[layer_idx][input_idx][node_idx]
 
                     if layer_idx == self.__hidden_layer :
-                        if is_sigmoid :
+                        if is_predict :
                             node_v = self.__sigmoid(node_v)
                         else :
                             node_v = round(self.__sigmoid(node_v))
