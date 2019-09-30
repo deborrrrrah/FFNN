@@ -100,9 +100,9 @@ class MiniBatch:
 
                 for node_idx in range (self.__n_nodes[layer_idx + 1]) : # iterate for each node in output layer
                     node_v = 0
-
-                    node_v = self.__weights[layer_idx][0][node_idx]
+                    
                     for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for 
+                        input_value = 0
                         if input_idx == 0 : # bias
                             input_value = 1
                         else :
