@@ -102,8 +102,16 @@ class MiniBatch:
                     node_v = 0
 
                     node_v = self.__weights[layer_idx][0][node_idx]
-                    for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for bias
-                        node_v = node_v + (batch[row_idx][input_idx] * self.__weights[layer_idx][input_idx][node_idx])
+                    for input_idx in range(self.__n_nodes[layer_idx]) : # iterate for input node from input layer, +1 for 
+                        if input_idx == 0 : # bias
+                            input_value = 1
+                        else :
+                            if layer_idx == 0 : # first layer (input from dataset)
+                                input_value = batch[row_idx][input_idx]
+                            else : # input from output before
+                                input_value = row[layer_idx - 1][input_idx]
+                        
+                        node_v += input_value * self.__weights[layer_idx][input_idx][node_idx]
 
                     if layer_idx == self.__hidden_layer :
                         if is_sigmoid :
